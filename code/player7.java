@@ -64,7 +64,7 @@ public class player7 implements ContestSubmission
         while(evals<evaluations_limit_){
             // Select parents
             // Apply crossover / mutation operators
-            Mutation.SimpleGaussian(this.rnd_, 0.01, population);
+            Mutation.simpleGaussian(this.rnd_, 0.01, population);
 
             //System.out.println(population[0][0]);
 
