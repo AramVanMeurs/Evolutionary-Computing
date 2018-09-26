@@ -1,6 +1,7 @@
 import org.vu.contest.ContestSubmission;
 import org.vu.contest.ContestEvaluation;
 
+import java.util.*;
 import java.util.Random;
 import java.util.Properties;
 
@@ -59,6 +60,12 @@ public class player7 implements ContestSubmission
         }
 
         System.out.println(population[0][0]);
+
+        double[] probs = {0.25,0.5,0.25,0.25};
+        int[] myArray = Selection.uniform(rnd_,100,5);
+
+        for(int i = 0; i < myArray.length; i++)
+            System.out.println(myArray[i]);
 
         // calculate fitness
         while(evals<evaluations_limit_){

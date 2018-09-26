@@ -1,5 +1,5 @@
-Javafiles=Mutation.java
-classfiles=Mutation.class
+Javafiles=Mutation.java Selection.java
+classfiles=Mutation.class Selection.class
 evalfunc=BentCigarFunction
 seed=1
 
@@ -12,5 +12,5 @@ submission:
 run:
 	java -jar testrun.jar -submission=player7 -evaluation=$(evalfunc) -seed=$(seed)
 
-comprun:
-	make compile && make run
+full:
+	make compile && make submission && make run
