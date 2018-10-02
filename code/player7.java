@@ -50,16 +50,11 @@ public class player7 implements ContestSubmission
 		// Run your algorithm here
         
         int evals = 0;
+
         // init population
-        double[][] population = new double[200][10];
+        Population population = new Population(rnd_,0,10,10,0.01,200);
 
-        for(int i = 0; i < population.length; i++){
-            for(int j = 0; j < population[i].length; j++){
-                population[i][j] = 10.0 * this.rnd_.nextDouble();
-            }
-        }
-
-        System.out.println(population[0][0]);
+        //System.out.println(population.group[0].value[0]);
 
         double[] probs = {0.25,0.5,0.25,0.25};
         int[] myArray = Selection.uniform(rnd_,100,5);
@@ -71,13 +66,16 @@ public class player7 implements ContestSubmission
         while(evals<evaluations_limit_){
             // Select parents
             // Apply crossover / mutation operators
-            Mutation.simpleGaussian(this.rnd_, 0.01, population);
+            Mutation.simpleGaussian(this.rnd_, population.group);
 
-            //System.out.println(population[0][0]);
+            //System.out.println(population.group[0].value[0]);
 
             double child[] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
             // Check fitness of unknown fuction
             Double fitness = (double) evaluation_.evaluate(child);
+
+            //System.out.println("Fitness: " + fitness);
+
             evals++;
             // Select survivors
         }

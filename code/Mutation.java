@@ -3,16 +3,24 @@ import java.util.Properties;
 
 public class Mutation
 {
+    /* Implements the Mutation class for an Evolutionary algorithm.
+     * This class contains mutation methods which can be applied to
+     * the values of an array of Individual objects.
+     *
+     * All methods apply the mutations in place.
+     *
+     * TODO:
+     * - Uncorrelated Nonuniform mutation methods with step size
+     * - Correlated Nonuniform mutation methods
+     */
 
-    static double min_value = 0.0;
-    static double max_value = 10.0;
-
-    static void uniform(Random rnd, double prob, double[][] children){
+    // Implements uniform mutation for real vector
+    static void uniform(Random rnd, double prob, Individual[] children){
         for(int i = 0; i < children.length; i++){
-            for(int j = 0; j < children[i].length; j++){
+            for(int j = 0; j < children[i].value.length; j++){
                 if(rnd.nextDouble() <= prob){
-                    children[i][j] = (Mutation.max_value - Mutation.min_value) * 
-                                      rnd.nextDouble() + Mutation.min_value;
+                    children[i].value[j] = (children[i].maxValue - children[i].minValue) * 
+                                           rnd.nextDouble() + children[i].minValue;
                 }
             }
         }
@@ -20,14 +28,17 @@ public class Mutation
         return;
     }
 
-    static void simpleGaussian(Random rnd, double sigma, double[][] children){
+    // Implements simple Gaussian mutation with a static variance
+    static void simpleGaussian(Random rnd, Individual[] children){
         for(int i = 0; i < children.length; i++){
-            for(int j = 0; j < children[i].length; j++){
-                children[i][j] += sigma * rnd.nextGaussian();
+            for(int j = 0; j < children[i].value.length; j++){
+                children[i].value[j] += children[i].std[j] * rnd.nextGaussian();
 
                 // Clip value to the domain of the problem
-                if(children[i][j] < Mutation.min_value) children[i][j] = Mutation.min_value;
-                if(children[i][j] > Mutation.max_value) children[i][j] = Mutation.max_value;
+                if(children[i].value[j] < children[i].minValue)
+                    children[i].value[j] = children[i].minValue;
+                if(children[i].value[j] > children[i].maxValue)
+                    children[i].value[j] = children[i].maxValue;
             }
         }
 

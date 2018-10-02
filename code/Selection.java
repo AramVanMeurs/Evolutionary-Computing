@@ -5,6 +5,19 @@ import java.util.Properties;
 class Selection
 {
 
+    /* Implements the Selection class for an Evolutionary algorithm.
+     * This class contains methods for both Parent selection and Survivor selection.
+     *
+     * As of now, all selection methods are planned to return an array of indices to
+     * pass to the Population class or a Population object for constructing a new group.
+     * (Any suggestions for change or improvement?)
+     *
+     * TODO:
+     * - Implement tournament selection
+     * - Implement ranking based selection
+     * - Implement survivor selection methods
+     */
+
     /* Implements roulette sampling for 
      * an arbitrary number of random numbers 
      */
@@ -46,20 +59,20 @@ class Selection
     }
 
     /* Implements tournament sampling used for tournament selection */
-    static int[] sampleTournament(Random rnd, double[] fitnesses, int tourSize, int num){
-        int[] matingPool = new int[num];
+    static int[] sampleTournament(Random rnd, Individual[] group, int tourSize, int numChildren){
+        int[] matingPool = new int[numChildren];
         int[] candidates = new int[tourSize];
         int bestCandidate;
 
-        for(int i = 0; i < num; i++){
+        for(int i = 0; i < numChildren; i++){
             // Sample candidates
             for(int j = 0; j < tourSize; j++)
-                candidates[j] = rnd.nextInt(fitnesses.length);
+                candidates[j] = rnd.nextInt(group.length);
 
             // Choose fittest candidate
             bestCandidate = candidates[0];
             for(int j = 1; j < tourSize; j++){
-                if(fitnesses[bestCandidate] < fitnesses[candidates[j]]){
+                if(group[candidates[j]].fitness > group[bestCandidate].fitness){
                     bestCandidate = candidates[j];
                 }
             }

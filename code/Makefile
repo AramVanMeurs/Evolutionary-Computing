@@ -1,5 +1,5 @@
-Javafiles=Mutation.java Selection.java
-classfiles=Mutation.class Selection.class
+Javafiles=Mutation.java Selection.java Individual.java Population.java
+classfiles=Mutation.class Selection.class Individual.class Population.class
 evalfunc=BentCigarFunction
 seed=1
 
