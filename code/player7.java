@@ -54,13 +54,32 @@ public class player7 implements ContestSubmission
         // init population
         Population population = new Population(rnd_,0,10,10,0.01,200);
 
+        for(int i = 0; i < population.group.length; i++){
+            population.group[i].setFitness((Double) evaluation_.evaluate(population.group[i].value));
+            evals++;
+        }
+
+        Individual copy = new Individual(rnd_,0,10,10,0.01);
+
+        for(int i = 0; i < 10; i++)
+            copy.value[i] = population.group[0].value[i];
+
+        System.out.println(population.group[0].equals(copy));
+        System.out.println(population.group[0] == copy);
+
+        //Arrays.sort(population.group);
+
+        //for(int i = 0; i < population.group.length; i++){
+        //    System.out.println(population.group[i].fitness);
+        //}
+
         //System.out.println(population.group[0].value[0]);
 
-        double[] probs = {0.25,0.5,0.25,0.25};
-        int[] myArray = Selection.uniform(rnd_,100,5);
+        //double[] probs = {0.25,0.5,0.25,0.25};
+        //int[] myArray = Selection.uniform(rnd_,100,5);
 
-        for(int i = 0; i < myArray.length; i++)
-            System.out.println(myArray[i]);
+        //for(int i = 0; i < myArray.length; i++)
+        //    System.out.println(myArray[i]);
 
         // calculate fitness
         while(evals<evaluations_limit_){
@@ -79,6 +98,8 @@ public class player7 implements ContestSubmission
             evals++;
             // Select survivors
         }
+
+        System.out.println("Done");
 
 	}
 }

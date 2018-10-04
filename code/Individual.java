@@ -1,7 +1,8 @@
+import java.util.*;
 import java.util.Random;
 import java.util.Properties;
 
-public class Individual
+public class Individual implements Comparable<Individual>
 {
 
     /* Implements the Individual class for an Evolutionary algorithm.
@@ -54,4 +55,18 @@ public class Individual
         this.fitness = fitness;
     }
 
+    /* Overriding methods from parent method */
+
+    // Compares two individuals using their fitnesses
+    public int compareTo(Individual that){
+        if(this.fitness > that.fitness) return 1;
+        else if (this.fitness < that.fitness) return -1;
+        else return 0;
+    }
+
+    // Checks if to individuals have identical solutions
+    public boolean equals(Individual that){
+        if(Arrays.equals(this.value,that.value)) return true;
+        else return false;
+    }
 }
