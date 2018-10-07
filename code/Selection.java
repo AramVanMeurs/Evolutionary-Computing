@@ -117,8 +117,8 @@ class Selection
     /* Implements Replace Worst selection for survivor selection.
      * Possibly 
      */
-    static Population survivorReplaceWorst(Population population, Population offspring, 
-                                           int numReplace, int maxAge){
+    static void survivorReplaceWorst(Population population, Population offspring, 
+                                     int numReplace, int maxAge){
 
         // Sort individuals based on fitness
         Arrays.sort(population.group);
@@ -129,37 +129,37 @@ class Selection
             population.group[i] = offspring.group[offspring.group.length - numReplace + i];
         }
 
-        return population;
+        return;
     }
 
     /* Implements round robin tournament selection for survivor selection */
-    static Population survivorRoundRobin(Random rnd, Population population, 
-                                         Population offspring, int maxAge){
+    static void survivorRoundRobin(Random rnd, Population population, 
+                                   Population offspring, int maxAge){
 
-        return population;
+        return;
     }
 
     /* Implements (mu + lambda) survivor selection */
-    static Population survivorMergeRanked(Population population, Population offspring, int maxAge){
+    static void survivorMergeRanked(Population population, Population offspring, int maxAge){
 
-        Individual[] mergedGroups;
+        Population[] mergePops = {population,offspring};
+        Population mergedPopulation;
 
         // Merge population and offspring
-        List mergedList = new ArrayList(Arrays.asList(population.group));
-        mergedList.addAll(Arrays.asList(offspring.group));
-        mergedGroups = (Individual[]) mergedList.toArray();
+        mergedPopulation = Population.merge(mergePops);
 
         // Insert best individuals back into population
-        Arrays.sort(mergedGroups);
+        Arrays.sort(mergedPopulation.group);
         for(int i = 0; i < population.group.length; i++){
-            population.group[i] = mergedGroups[mergedGroups.length - population.group.length + i];
+            population.group[i] = mergedPopulation.group[mergedPopulation.group.length - 
+                                                         population.group.length + i];
         }
 
-        return population;
+        return;
     }
 
     /* Implements (mu, lambda) survivor selection */
-    static Population survivorGenerationalRanked(Population population, Population offspring){
+    static void survivorGenerationalRanked(Population population, Population offspring){
 
         // Replace full population with best offspring
         Arrays.sort(offspring.group);
@@ -167,6 +167,6 @@ class Selection
             population.group[i] = offspring.group[offspring.group.length - population.group.length + i];
         }       
 
-        return population;
+        return;
     }
 }

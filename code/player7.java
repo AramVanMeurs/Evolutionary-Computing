@@ -52,7 +52,9 @@ public class player7 implements ContestSubmission
         int evals = 0;
 
         // init population
-        Population population = new Population(rnd_,-5,5,10,0.01,5);
+        Individual[] matingPool;
+        Population offspring;
+        Population population = new Population(this.rnd_,-5,5,10,0.01,10);
 
         // Declare test population
         Individual[] test;
@@ -65,16 +67,25 @@ public class player7 implements ContestSubmission
         // calculate fitness
         while(evals<evaluations_limit_){
             // Select parents
+            matingPool = Selection.parentLinearRanking(this.rnd_,population,1.5,30);
+
             // Apply crossover / mutation operators
+            offspring = Recombination.simpleArithmetic(matingPool,0.5,5);
+            Mutation.uniform(this.rnd_,0.05,offspring.group);
             //Mutation.simpleGaussian(this.rnd_, population.group);
-            Mutation.creepMutation(this.rnd_, 0.05, 0.15, 2, population.group);
+            //Mutation.creepMutation(this.rnd_, 0.05, 0.15, 2, population.group);
 
-            double child[] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
             // Check fitness of unknown fuction
-            Double fitness = (double) evaluation_.evaluate(child);
+            for(int i = 0; i < offspring.group.length; i++){
+                offspring.group[i].setFitness((Double) evaluation_.evaluate(offspring.group[i].value));
+                evals++;
+            }
 
-            evals++;
             // Select survivors
+            Selection.survivorGenerationalRanked(population,offspring);
+
+            // Increment ages of survivors by 1
+            population.incrementAges(1);
         }
 
         System.out.println("Done");

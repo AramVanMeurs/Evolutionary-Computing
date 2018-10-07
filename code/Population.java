@@ -58,15 +58,26 @@ public class Population
             this.group[i].setFitness(fitnesses[i]);
     }
 
-    static Population mergePopulations(Population[] populations){
+    /* Increments the age of all individuals in the population */
+    void incrementAges(int n){
+        for(int i = 0; i < this.group.length; i++)
+            this.group[i].age += n;
+
+        return;
+    }
+
+    static Population merge(Population[] populations){
         Individual[] mergedGroups;
 
-        List mergedList = new ArrayList(Arrays.asList(populations[0].group));
+        ArrayList<Individual> mergedList = new ArrayList(Arrays.asList(populations[0].group));
 
+        // Add elements of all populations together in the ArrayList
         for(int i = 1; i < populations.length; i++)
             mergedList.addAll(Arrays.asList(populations[i].group));
 
-        mergedGroups = (Individual[]) mergedList.toArray();
+        // Cast back to array of Individuals
+        mergedGroups = new Individual[mergedList.size()];
+        mergedGroups = mergedList.toArray(mergedGroups);
 
         return new Population(mergedGroups);
     }

@@ -1,6 +1,6 @@
-Javafiles=Mutation.java Selection.java Individual.java Population.java
-classfiles=Mutation.class Selection.class Individual.class Population.class
-evalfunc=BentCigarFunction
+Javafiles=Mutation.java Recombination.java Selection.java Individual.java Population.java
+classfiles=Mutation.class Recombination.class Selection.class Individual.class Population.class
+evalfunc=SchaffersEvaluation
 seed=1
 
 compile:

@@ -28,23 +28,31 @@ public class Individual implements Comparable<Individual>
     // Basic constructor
     Individual() {}
 
-    /* Minimal Individual constructor
-     * Implements basic initialization
-     */
-    Individual(Random rnd, double minVal, double maxVal, int length){
+    /* Minimal Individual constructor */
+    Individual(double minVal, double maxVal, int length){
         this.minValue = minVal;
         this.maxValue = maxVal;
 
-        // Initialize individual value using Uniform distribution
+        // Initialize individual value array
         this.value = new double[length];
-        for(int i = 0; i < length; i++) 
-            this.value[i] = (maxVal - minVal) * rnd.nextDouble() + minVal;
 
         // Initialize fitness to minVal until evaluated
         this.fitness = minVal;
 
         // Initialize age
         this.age = 0;
+    }
+
+    /* Minimal Individual constructor
+     * Implements basic initialization
+     */
+    Individual(Random rnd, double minVal, double maxVal, int length){
+        this(minVal,maxVal,length);
+
+        // Initialize individual value using Uniform distribution
+        for(int i = 0; i < length; i++) 
+            this.value[i] = (maxVal - minVal) * rnd.nextDouble() + minVal;
+
     }
 
     /* Invidivdual constructor with standard deviation specified */
