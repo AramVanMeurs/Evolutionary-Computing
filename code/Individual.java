@@ -22,7 +22,11 @@ public class Individual implements Comparable<Individual>
     // Standard deviation per element used for mutation
     double[] std;
 
+    int age;
     double fitness;
+
+    // Basic constructor
+    Individual() {}
 
     /* Minimal Individual constructor
      * Implements basic initialization
@@ -38,6 +42,9 @@ public class Individual implements Comparable<Individual>
 
         // Initialize fitness to minVal until evaluated
         this.fitness = minVal;
+
+        // Initialize age
+        this.age = 0;
     }
 
     /* Invidivdual constructor with standard deviation specified */

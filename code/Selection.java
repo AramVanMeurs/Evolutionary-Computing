@@ -58,52 +58,115 @@ class Selection
         return matingPool;
     }
 
-    /* Implements tournament sampling used for tournament selection */
-    static int[] sampleTournament(Random rnd, Individual[] group, int tourSize, int numChildren){
-        int[] matingPool = new int[numChildren];
-        int[] candidates = new int[tourSize];
-        int bestCandidate;
+    /* Implements parent tournament selection */
+    static Individual[] parentTournament(Random rnd, Population pop, int tourSize, int numAccept, int numChildren){
+        Individual[] matingPool = new Individual[numChildren];
+        Individual[] candidates = new Individual[tourSize];
 
-        for(int i = 0; i < numChildren; i++){
+        for(int i = 0; i < numChildren; i += numAccept){
             // Sample candidates
             for(int j = 0; j < tourSize; j++)
-                candidates[j] = rnd.nextInt(group.length);
+                candidates[j] = pop.group[rnd.nextInt(pop.group.length)];
 
-            // Choose fittest candidate
-            bestCandidate = candidates[0];
-            for(int j = 1; j < tourSize; j++){
-                if(group[candidates[j]].fitness > group[bestCandidate].fitness){
-                    bestCandidate = candidates[j];
-                }
+            // Choose fittest candidates
+            Arrays.sort(candidates);
+            for(int j = 0; j < numAccept; j++){
+                if(i+j < matingPool.length)
+                    matingPool[i+j] = candidates[tourSize - 1 - j];
             }
-
-            matingPool[i] = bestCandidate;
         }
 
         return matingPool;
     }
 
     /* Implements ranking parent selection */
-    static void ranking(Random rnd){
-        return;
-    }
+    static Individual[] parentLinearRanking(Random rnd, Population pop, double s, int numChildren){
+        Individual[] matingPool = new Individual[numChildren];
 
-    /* Implements tournament parent selection */
-    static void tournament(Random rnd){
-        return;
+        int[] samples;
+
+        double[] probs = new double[pop.group.length];
+        double mu = probs.length;
+
+        // Sort group based on fitness for ranking
+        Arrays.sort(pop.group);
+
+        // Compute probabilities from ranking
+        for(int i = 0; i < probs.length; i++)
+            probs[i] = (2-s) / mu + 2*i*(s-1) / (mu*(mu-1));
+
+        samples = sampleRoulette(rnd,probs,numChildren);
+
+        for(int i = 0; i < samples.length; i++){
+            matingPool[i] = pop.group[samples[i]];
+        }
+
+        return matingPool;
     }
 
     /* Implements uniform parent selection */
-    static int[] uniform(Random rnd, int popSize, int num){
-        int[] parents = new int[num];
+    static Individual[] parentUniform(Random rnd, Population pop, int numChildren){
+        Individual[] matingPool = new Individual[numChildren];
 
-        for(int i = 0; i < num; i++)
-            parents[i] = rnd.nextInt(popSize);
+        for(int i = 0; i < numChildren; i++)
+            matingPool[i] = pop.group[rnd.nextInt(pop.group.length)];
 
-        return parents;
+        return matingPool;
     }
 
-    void replaceWorst(Random rnd){
-        return;
+    /* Implements Replace Worst selection for survivor selection.
+     * Possibly 
+     */
+    static Population survivorReplaceWorst(Population population, Population offspring, 
+                                           int numReplace, int maxAge){
+
+        // Sort individuals based on fitness
+        Arrays.sort(population.group);
+        Arrays.sort(offspring.group);
+
+        // Replace worst of population with best from offspring
+        for(int i = 0; i < numReplace; i++){
+            population.group[i] = offspring.group[offspring.group.length - numReplace + i];
+        }
+
+        return population;
+    }
+
+    /* Implements round robin tournament selection for survivor selection */
+    static Population survivorRoundRobin(Random rnd, Population population, 
+                                         Population offspring, int maxAge){
+
+        return population;
+    }
+
+    /* Implements (mu + lambda) survivor selection */
+    static Population survivorMergeRanked(Population population, Population offspring, int maxAge){
+
+        Individual[] mergedGroups;
+
+        // Merge population and offspring
+        List mergedList = new ArrayList(Arrays.asList(population.group));
+        mergedList.addAll(Arrays.asList(offspring.group));
+        mergedGroups = (Individual[]) mergedList.toArray();
+
+        // Insert best individuals back into population
+        Arrays.sort(mergedGroups);
+        for(int i = 0; i < population.group.length; i++){
+            population.group[i] = mergedGroups[mergedGroups.length - population.group.length + i];
+        }
+
+        return population;
+    }
+
+    /* Implements (mu, lambda) survivor selection */
+    static Population survivorGenerationalRanked(Population population, Population offspring){
+
+        // Replace full population with best offspring
+        Arrays.sort(offspring.group);
+        for(int i = 0; i < population.group.length; i++){
+            population.group[i] = offspring.group[offspring.group.length - population.group.length + i];
+        }       
+
+        return population;
     }
 }

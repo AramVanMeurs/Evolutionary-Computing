@@ -16,10 +16,6 @@ public class player7 implements ContestSubmission
 		rnd_ = new Random();
 	}
 	
-    public static void test(){
-    	System.out.println("Start");
-    }
-
 	public void setSeed(long seed)
 	{
 		// Set seed of algortihms random process
@@ -52,54 +48,30 @@ public class player7 implements ContestSubmission
 	public void run()
 	{
 		// Run your algorithm here
-
-	    test();
+        
         int evals = 0;
 
         // init population
-        Population population = new Population(rnd_,-5,5,10,0.01,200);
+        Population population = new Population(rnd_,-5,5,10,0.01,5);
+
+        // Declare test population
+        Individual[] test;
 
         for(int i = 0; i < population.group.length; i++){
             population.group[i].setFitness((Double) evaluation_.evaluate(population.group[i].value));
             evals++;
         }
 
-        Individual copy = new Individual(rnd_,-5,5,10,0.01);
-
-        for(int i = 0; i < 10; i++)
-            copy.value[i] = population.group[0].value[i];
-
-        System.out.println(population.group[0].equals(copy));
-        System.out.println(population.group[0] == copy);
-
-        //Arrays.sort(population.group);
-
-        //for(int i = 0; i < population.group.length; i++){
-        //    System.out.println(population.group[i].fitness);
-        //}
-
-        //System.out.println(population.group[0].value[0]);
-
-        //double[] probs = {0.25,0.5,0.25,0.25};
-        //int[] myArray = Selection.uniform(rnd_,100,5);
-
-        //for(int i = 0; i < myArray.length; i++)
-        //    System.out.println(myArray[i]);
-
         // calculate fitness
         while(evals<evaluations_limit_){
             // Select parents
             // Apply crossover / mutation operators
             //Mutation.simpleGaussian(this.rnd_, population.group);
-        	Mutation.creepMutation(this.rnd_, 0.05, 0.15, 2, population.group);
-
-            //System.out.println(population.group[0].value[0]);
+            Mutation.creepMutation(this.rnd_, 0.05, 0.15, 2, population.group);
 
             double child[] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
             // Check fitness of unknown fuction
             Double fitness = (double) evaluation_.evaluate(child);
-
-            //System.out.println("Fitness: " + fitness);
 
             evals++;
             // Select survivors

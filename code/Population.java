@@ -1,3 +1,4 @@
+import java.util.*;
 import java.util.Random;
 import java.util.Properties;
 
@@ -15,6 +16,14 @@ public class Population
      */
 
     Individual[] group;
+
+    // Basic constructor
+    Population() {}
+
+    // Basic constructor initializing the group array
+    Population(int popSize){
+        this.group = new Individual[popSize];
+    }
 
     /* Basic Population constructor
      * Uses basic initialization of individuals
@@ -35,11 +44,8 @@ public class Population
     /* Basic Population constructor
      * Uses existing Individual array as input
      */
-    Population(Individual[] group, boolean copy){
-        if(copy)
-            this.group = group.clone();
-        else
-            this.group = group;
+    Population(Individual[] group){
+        this.group = group;
     }
 
     /* Sets fitnesses of individuals when
@@ -50,5 +56,18 @@ public class Population
 
         for(int i = 0; i < fitnesses.length; i++)
             this.group[i].setFitness(fitnesses[i]);
+    }
+
+    static Population mergePopulations(Population[] populations){
+        Individual[] mergedGroups;
+
+        List mergedList = new ArrayList(Arrays.asList(populations[0].group));
+
+        for(int i = 1; i < populations.length; i++)
+            mergedList.addAll(Arrays.asList(populations[i].group));
+
+        mergedGroups = (Individual[]) mergedList.toArray();
+
+        return new Population(mergedGroups);
     }
 }
