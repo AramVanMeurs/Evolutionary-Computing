@@ -16,6 +16,10 @@ public class player7 implements ContestSubmission
 		rnd_ = new Random();
 	}
 	
+    public static void test(){
+    	System.out.println("Start");
+    }
+
 	public void setSeed(long seed)
 	{
 		// Set seed of algortihms random process
@@ -48,18 +52,19 @@ public class player7 implements ContestSubmission
 	public void run()
 	{
 		// Run your algorithm here
-        
+
+	    test();
         int evals = 0;
 
         // init population
-        Population population = new Population(rnd_,0,10,10,0.01,200);
+        Population population = new Population(rnd_,-5,5,10,0.01,200);
 
         for(int i = 0; i < population.group.length; i++){
             population.group[i].setFitness((Double) evaluation_.evaluate(population.group[i].value));
             evals++;
         }
 
-        Individual copy = new Individual(rnd_,0,10,10,0.01);
+        Individual copy = new Individual(rnd_,-5,5,10,0.01);
 
         for(int i = 0; i < 10; i++)
             copy.value[i] = population.group[0].value[i];
@@ -85,7 +90,8 @@ public class player7 implements ContestSubmission
         while(evals<evaluations_limit_){
             // Select parents
             // Apply crossover / mutation operators
-            Mutation.simpleGaussian(this.rnd_, population.group);
+            //Mutation.simpleGaussian(this.rnd_, population.group);
+        	Mutation.creepMutation(this.rnd_, 0.05, 0.15, 1, population.group);
 
             //System.out.println(population.group[0].value[0]);
 
