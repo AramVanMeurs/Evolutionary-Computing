@@ -55,10 +55,14 @@ public class Mutation
     				double change = rnd.nextDouble() * 2 - 1; //Random number between -1 and 1
     				if(random2 <= largeChangeProb){
     					//Large change
+    	    			//System.out.println("Large before: " + children[i].value[j]);
     					children[i].value[j] += change * changeMultiplier;
+    					//System.out.println("Large after: " + children[i].value[j]);
     				}else{
     					//Small change
+    					//System.out.println("Small before: " + children[i].value[j]);
     					children[i].value[j] += change * (1/changeMultiplier);
+    					//System.out.println("Small after: " + children[i].value[j]);
     				}
                     if(children[i].value[j] < children[i].minValue)
                         children[i].value[j] = children[i].minValue;

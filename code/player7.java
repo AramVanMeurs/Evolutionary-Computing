@@ -91,7 +91,7 @@ public class player7 implements ContestSubmission
             // Select parents
             // Apply crossover / mutation operators
             //Mutation.simpleGaussian(this.rnd_, population.group);
-        	Mutation.creepMutation(this.rnd_, 0.05, 0.15, 1, population.group);
+        	Mutation.creepMutation(this.rnd_, 0.05, 0.15, 2, population.group);
 
             //System.out.println(population.group[0].value[0]);
 
