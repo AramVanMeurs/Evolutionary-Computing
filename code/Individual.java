@@ -25,6 +25,9 @@ public class Individual implements Comparable<Individual>
     int age;
     double fitness;
 
+    // Number of wins used for round robin tournament
+    int wins;
+
     // Basic constructor
     Individual() {}
 
@@ -35,6 +38,9 @@ public class Individual implements Comparable<Individual>
 
         // Initialize individual value array
         this.value = new double[length];
+
+        // Initialize standard deviation array
+        this.std = new double[length];
 
         // Initialize fitness to minVal until evaluated
         this.fitness = minVal;
@@ -60,7 +66,6 @@ public class Individual implements Comparable<Individual>
         this(rnd,minVal,maxVal,length);
 
         // Initialize standard deviation per element
-        this.std = new double[length];
         for(int i = 0; i < length; i++) 
             this.std[i] = std;
     }
@@ -68,6 +73,40 @@ public class Individual implements Comparable<Individual>
     // Sets the fitness of the individual
     void setFitness(double fitness){
         this.fitness = fitness;
+    }
+
+    /* Comparators for non fitness metrics */
+
+    /*
+    //Comparator for sorting Individuals by wins
+    public static Comparator<Individual> winSort = new Comparator<Individual>() {
+        public int compare(Individual first, Individual second){
+            if(first.wins > second.wins) return 1;
+            else if (first.wins < second.wins) return -1;
+            else return 0;
+        }
+    };
+
+    //Comparator for sorting Individuals by age
+    public static Comparator<Individual> ageSort = new Comparator<Individual>() {
+        public int compare(Individual first, Individual second){
+            if(first.age > second.age) return 1;
+            else if (first.age < second.age) return -1;
+            else return 0;
+        }
+    };
+    */
+
+    public static int compareWins(Individual first, Individual second){
+        if(first.wins > second.wins) return 1;
+        else if (first.wins < second.wins) return -1;
+        else return 0;
+    }
+
+    public static int compareAges(Individual first, Individual second){
+        if(first.age > second.age) return 1;
+        else if (first.age < second.age) return -1;
+        else return 0;
     }
 
     /* Overriding methods from parent method */

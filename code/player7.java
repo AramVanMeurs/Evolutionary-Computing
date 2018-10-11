@@ -44,51 +44,107 @@ public class player7 implements ContestSubmission
             // Do sth else
         }
     }
-    
+
 	public void run()
 	{
 		// Run your algorithm here
         
+        // Run parameters
         int evals = 0;
+        int epochs = 0;
 
-        // init population
+        // Island model parameters
+        int islands = 10;
+
+        // Individual parameters
+        double minVal = -5;
+        double maxVal = 5;
+        double std = 0.1;
+        int dim = 10;
+
+        // Population parameters
+        int popSize = 10;
+
+        // Island run parameters
         Individual[] matingPool;
         Population offspring;
-        Population population = new Population(this.rnd_,-5,5,10,0.01,10);
+        Population island;
 
-        // Declare test population
-        Individual[] test;
+        // Parent selection parameters
+        double rankingParam = 1.5;
+        int numParents = 30;
 
-        for(int i = 0; i < population.group.length; i++){
-            population.group[i].setFitness((Double) evaluation_.evaluate(population.group[i].value));
-            evals++;
+        // Recombination parameters
+        double alpha = 0.5;
+        int allele = 5;
+
+        // Mutation parameters
+        double mProb = 0.05;
+        double lr1 = 1 / Math.sqrt(2.0 * dim);
+        double lr2 = 1 / Math.sqrt(2.0 * Math.sqrt(dim));
+        double eps = 0.001;
+
+        // Survivor selection parameters
+        int numReplace = 5;
+
+        // Initialize archipelago
+        Population[] archipelago = new Population[islands];
+        for(int i = 0; i < islands; i++){
+            archipelago[i] = new Population(this.rnd_,minVal,maxVal,dim,std,popSize);
+
+            for(int j = 0; j < archipelago[i].group.length; j++){
+                archipelago[i].group[j].setFitness((Double) evaluation_.evaluate(archipelago[i].group[j].value));
+                evals++;
+            }
         }
 
         // calculate fitness
         while(evals<evaluations_limit_){
-            // Select parents
-            matingPool = Selection.parentLinearRanking(this.rnd_,population,1.5,30);
 
-            // Apply crossover / mutation operators
-            offspring = Recombination.simpleArithmetic(matingPool,0.5,5);
-            Mutation.uniform(this.rnd_,0.05,offspring.group);
-            //Mutation.simpleGaussian(this.rnd_, population.group);
-            //Mutation.creepMutation(this.rnd_, 0.05, 0.15, 2, population.group);
+            // Run Evolution Algorithm for each island
+            for(int i = 0; i < islands; i++){
+                // Set current island
+                island = archipelago[i];
 
-            // Check fitness of unknown fuction
-            for(int i = 0; i < offspring.group.length; i++){
-                offspring.group[i].setFitness((Double) evaluation_.evaluate(offspring.group[i].value));
-                evals++;
+                // Select parents
+                matingPool = Selection.parentLinearRanking(this.rnd_,island,rankingParam,numParents);
+
+                // Apply crossover operator
+                offspring = Recombination.simpleArithmetic(matingPool,alpha,allele);
+                //offspring = Recombination.singleArithmetic(this.rnd_,matingPool,alpha);
+                //offspring = Recombination.blendCrossover(this.rnd_,matingPool,alpha);
+
+                // Apply mutation operator
+                //Mutation.uniform(this.rnd_,mProb,offspring.group);
+                //Mutation.simpleGaussian(this.rnd_, offspring.group);
+                Mutation.uncorrelatedAdaptiveGaussian(this.rnd_,offspring.group,lr1,lr2,eps);
+                //Mutation.creepMutation(this.rnd_, 0.05, 0.15, 2, offspring.group);
+
+                // Check fitness of unknown fuction
+                for(int j = 0; j < offspring.group.length; j++){
+                    offspring.group[j].setFitness((Double) evaluation_.evaluate(offspring.group[j].value));
+                    evals++;
+                }
+
+                // Select survivors
+                //Selection.survivorReplaceWorst(island,offspring,numReplace);
+                //Selection.survivorMergeRanked(island,offspring);
+                Selection.survivorGenerationalRanked(island,offspring);
+
+                // Increment ages of survivors by 1
+                island.incrementAges(1);
             }
 
-            // Select survivors
-            Selection.survivorGenerationalRanked(population,offspring);
-
-            // Increment ages of survivors by 1
-            population.incrementAges(1);
+            epochs++;
+            // Break if too many evals needed for next generation
+            if(evals >= (evaluations_limit_ - numParents*islands)){
+                break;
+            }
         }
 
-        System.out.println("Done");
-
+        /* Lambda expressions example for comparing 
+         * individuals based on non-fitness metrics
+         */
+        //Collections.sort(listObject,(a,b) -> Individual.compareAges(a,b));
 	}
 }

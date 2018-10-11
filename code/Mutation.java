@@ -28,7 +28,7 @@ public class Mutation
         return;
     }
 
-    // Implements simple Gaussian mutation with a static variance
+    // Implements simple Gaussian perturbation mutation using individual variance(s)
     static void simpleGaussian(Random rnd, Individual[] children){
         for(int i = 0; i < children.length; i++){
             for(int j = 0; j < children[i].value.length; j++){
@@ -43,6 +43,27 @@ public class Mutation
         }
 
         return;
+    }
+
+    // Implements Gaussian mutation with changing step sizes
+    static void uncorrelatedAdaptiveGaussian(Random rnd, Individual[] children, double lr1, double lr2, double eps){
+        double baseMutation;
+        double stepFactor;
+
+        // Apply mutation to std values
+        for(int i = 0; i < children.length; i++){
+            baseMutation = lr1 * rnd.nextGaussian();
+            for(int j = 0; j < children[i].value.length; j++){
+                stepFactor = Math.exp(baseMutation + lr2 * rnd.nextGaussian());
+                children[i].std[j] = children[i].std[j] * stepFactor;
+
+                if(children[i].std[j] < eps)
+                    children[i].std[j] = eps;
+            }
+        }
+
+        // Apply Gaussian perturbation
+        simpleGaussian(rnd,children);
     }
 
     /* Implements creep mutation: add small (positive/negative) value to gene value, 

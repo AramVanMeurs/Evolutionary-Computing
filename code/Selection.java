@@ -118,7 +118,7 @@ class Selection
      * Possibly 
      */
     static void survivorReplaceWorst(Population population, Population offspring, 
-                                     int numReplace, int maxAge){
+                                     int numReplace){
 
         // Sort individuals based on fitness
         Arrays.sort(population.group);
@@ -134,13 +134,13 @@ class Selection
 
     /* Implements round robin tournament selection for survivor selection */
     static void survivorRoundRobin(Random rnd, Population population, 
-                                   Population offspring, int maxAge){
+                                   Population offspring){
 
         return;
     }
 
     /* Implements (mu + lambda) survivor selection */
-    static void survivorMergeRanked(Population population, Population offspring, int maxAge){
+    static void survivorMergeRanked(Population population, Population offspring){
 
         Population[] mergePops = {population,offspring};
         Population mergedPopulation;

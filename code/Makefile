@@ -1,7 +1,9 @@
 Javafiles=Mutation.java Recombination.java Selection.java Individual.java Population.java
 classfiles=Mutation.class Recombination.class Selection.class Individual.class Population.class
+#evalfunc=BentCigarFunction
 evalfunc=SchaffersEvaluation
-seed=1
+#evalfunc=KatsuuraEvaluation
+seed=8
 
 compile:
 	javac -cp contest.jar player7.java $(Javafiles)
