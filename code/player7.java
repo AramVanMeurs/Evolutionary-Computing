@@ -55,6 +55,10 @@ public class player7 implements ContestSubmission
 
         // Island model parameters
         int islands = 10;
+        int migration = 25;
+        int numSwap = 1;
+        String policy = "best";
+        boolean shuffle = false;
 
         // Individual parameters
         double minVal = -5;
@@ -128,14 +132,19 @@ public class player7 implements ContestSubmission
 
                 // Select survivors
                 //Selection.survivorReplaceWorst(island,offspring,numReplace);
-                //Selection.survivorMergeRanked(island,offspring);
-                Selection.survivorGenerationalRanked(island,offspring);
+                Selection.survivorMergeRanked(island,offspring);
+                //Selection.survivorGenerationalRanked(island,offspring);
 
                 // Increment ages of survivors by 1
                 island.incrementAges(1);
             }
 
-            epochs++;
+            // Migrate individuals between islands after an amount of epochs
+            if(++epochs == migration){
+                Population.migrate(this.rnd_,archipelago,numSwap,policy,shuffle);
+                epochs = 0;
+            }
+
             // Break if too many evals needed for next generation
             if(evals >= (evaluations_limit_ - numParents*islands)){
                 break;
@@ -145,6 +154,10 @@ public class player7 implements ContestSubmission
         /* Lambda expressions example for comparing 
          * individuals based on non-fitness metrics
          */
-        //Collections.sort(listObject,(a,b) -> Individual.compareAges(a,b));
+        //Collections.shuffle(Population.getArrayList(archipelago),this.rnd_);
+        //Arrays.sort(archipelago[0].group,(a,b) -> Individual.compareAges(a,b));
+        //System.out.println(archipelago[0]);
+        //System.out.println(archipelago[0].group[0].age);
+        //System.out.println(archipelago[0].group[popSize-1].age);
 	}
 }
