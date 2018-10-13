@@ -79,7 +79,7 @@ class Selection
         return matingPool;
     }
 
-    /* Implements ranking parent selection */
+    /* Implements linear ranking parent selection */
     static Individual[] parentLinearRanking(Random rnd, Population pop, double s, int numChildren){
         Individual[] matingPool = new Individual[numChildren];
 
@@ -104,6 +104,38 @@ class Selection
         return matingPool;
     }
 
+    /* Implements exponential ranking parent selection */
+    static Individual[] parentExponentialRanking(Random rnd, Population pop, int numChildren){
+        Individual[] matingPool = new Individual[numChildren];
+
+        int[] samples;
+
+        double[] probs = new double[pop.group.length];
+        double normFactor = 0;
+
+        // Sort group based on fitness for ranking
+        Arrays.sort(pop.group);
+
+        // Compute probabilities from ranking
+        for(int i = 0; i < probs.length; i++){
+            probs[i] = 1 - Math.exp(-i);
+            normFactor += probs[i];
+        }
+
+        // Normalize probabilities
+        for(int i = 0; i < probs.length; i++){
+            probs[i] /= normFactor;
+        }
+
+        samples = sampleRoulette(rnd,probs,numChildren);
+
+        for(int i = 0; i < samples.length; i++){
+            matingPool[i] = pop.group[samples[i]];
+        }
+
+        return matingPool;
+    }
+
     /* Implements uniform parent selection */
     static Individual[] parentUniform(Random rnd, Population pop, int numChildren){
         Individual[] matingPool = new Individual[numChildren];
@@ -115,7 +147,8 @@ class Selection
     }
 
     /* Implements Replace Worst selection for survivor selection.
-     * Possibly 
+     * Replaces the worst of the population with the best of the offspring.
+     * Probably not the same as the GENITOR algorithm described in the book.
      */
     static void survivorReplaceWorst(Population population, Population offspring, 
                                      int numReplace){
@@ -134,7 +167,48 @@ class Selection
 
     /* Implements round robin tournament selection for survivor selection */
     static void survivorRoundRobin(Random rnd, Population population, 
-                                   Population offspring){
+                                   Population offspring, int numRivals){
+
+        int count, result;
+        Individual candidate, rival;
+
+        // Get merged populations
+        Population[] pops = {population,offspring};
+        Population merged = Population.merge(pops);
+
+        // Get list to shuffle
+        ArrayList<Individual> mergedList = Individual.getArrayList(merged.group);
+
+        // Determine wins in tournament
+        for(int i = 0; i < merged.group.length; i++){
+            // Randomize rivals
+            Collections.shuffle(mergedList,rnd);
+
+            // Initialize candidate for tournament
+            candidate = merged.group[i];
+            candidate.wins = 0;
+
+            count = 0;
+            for(int j = 0; j < merged.group.length; j++){
+                rival = mergedList.get(j);
+
+                // Candidate does not battle itself
+                if(rival != candidate){
+                    candidate.wins += (candidate.fitness > rival.fitness ? 1 : 0);
+                    count++;
+                }
+
+                if(count >= numRivals) break;
+            }
+        }
+
+        // Sort based on wins
+        Arrays.sort(merged.group, (a,b) -> Individual.compareWins(a,b));
+
+        // Insert survivors into population
+        for(int i = 0; i < population.group.length; i++){
+            population.group[i] = merged.group[merged.group.length - population.group.length + i];
+        }
 
         return;
     }

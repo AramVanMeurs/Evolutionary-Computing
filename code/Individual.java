@@ -75,27 +75,17 @@ public class Individual implements Comparable<Individual>
         this.fitness = fitness;
     }
 
-    /* Comparators for non fitness metrics */
+    /* Returns arraylist of Individual objects */
+    static ArrayList<Individual> getArrayList(Individual[] group){
+        ArrayList<Individual> groupList = new ArrayList<Individual>();
 
-    /*
-    //Comparator for sorting Individuals by wins
-    public static Comparator<Individual> winSort = new Comparator<Individual>() {
-        public int compare(Individual first, Individual second){
-            if(first.wins > second.wins) return 1;
-            else if (first.wins < second.wins) return -1;
-            else return 0;
-        }
-    };
+        for(int i = 0; i < group.length; i++)
+            groupList.add(group[i]);
 
-    //Comparator for sorting Individuals by age
-    public static Comparator<Individual> ageSort = new Comparator<Individual>() {
-        public int compare(Individual first, Individual second){
-            if(first.age > second.age) return 1;
-            else if (first.age < second.age) return -1;
-            else return 0;
-        }
-    };
-    */
+        return groupList;
+    }
+
+    /* Comparison functions */
 
     public static int compareWins(Individual first, Individual second){
         if(first.wins > second.wins) return 1;

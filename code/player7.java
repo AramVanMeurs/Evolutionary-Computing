@@ -54,16 +54,16 @@ public class player7 implements ContestSubmission
         int epochs = 0;
 
         // Island model parameters
-        int islands = 10;
+        int islands = 5;
         int migration = 25;
-        int numSwap = 1;
+        int numSwap = 2;
         String policy = "best";
-        boolean shuffle = false;
+        boolean shuffle = true;
 
         // Individual parameters
         double minVal = -5;
         double maxVal = 5;
-        double std = 0.1;
+        double std = 1.0;
         int dim = 10;
 
         // Population parameters
@@ -83,13 +83,14 @@ public class player7 implements ContestSubmission
         int allele = 5;
 
         // Mutation parameters
-        double mProb = 0.05;
+        double mProb = 0.1;
         double lr1 = 1 / Math.sqrt(2.0 * dim);
         double lr2 = 1 / Math.sqrt(2.0 * Math.sqrt(dim));
         double eps = 0.001;
 
         // Survivor selection parameters
         int numReplace = 5;
+        int numRivals = 5;
 
         // Initialize archipelago
         Population[] archipelago = new Population[islands];
@@ -111,12 +112,14 @@ public class player7 implements ContestSubmission
                 island = archipelago[i];
 
                 // Select parents
-                matingPool = Selection.parentLinearRanking(this.rnd_,island,rankingParam,numParents);
+                //matingPool = Selection.parentLinearRanking(this.rnd_,island,rankingParam,numParents);
+                matingPool = Selection.parentExponentialRanking(this.rnd_,island,numParents);
+                //matingPool = Selection.parentUniform(this.rnd_,island,numParents);
 
                 // Apply crossover operator
-                offspring = Recombination.simpleArithmetic(matingPool,alpha,allele);
+                //offspring = Recombination.simpleArithmetic(matingPool,alpha,allele);
                 //offspring = Recombination.singleArithmetic(this.rnd_,matingPool,alpha);
-                //offspring = Recombination.blendCrossover(this.rnd_,matingPool,alpha);
+                offspring = Recombination.blendCrossover(this.rnd_,matingPool,alpha);
 
                 // Apply mutation operator
                 //Mutation.uniform(this.rnd_,mProb,offspring.group);
@@ -132,7 +135,8 @@ public class player7 implements ContestSubmission
 
                 // Select survivors
                 //Selection.survivorReplaceWorst(island,offspring,numReplace);
-                Selection.survivorMergeRanked(island,offspring);
+                Selection.survivorRoundRobin(this.rnd_,island,offspring,numRivals);
+                //Selection.survivorMergeRanked(island,offspring);
                 //Selection.survivorGenerationalRanked(island,offspring);
 
                 // Increment ages of survivors by 1

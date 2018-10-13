@@ -130,7 +130,7 @@ public class Recombination
             offspring[i+1] = new Individual(minVal,maxVal,length);
 
             // Sample blend parameter
-            gamma = (1 - 2 * alpha) * rnd.nextDouble() - alpha;
+            gamma = (1 + 2 * alpha) * rnd.nextDouble() - alpha;
 
             // Apply arithmetic average using gamma
             for(int j = 0; j < length; j++){
