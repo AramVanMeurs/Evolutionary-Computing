@@ -6,10 +6,6 @@ public class Recombination
     /* Implements the Recombination class for an Evolutionary algorithm.
      * This class contains recombination methods which can be used to
      * produce the offspring of an array of Individual objects.
-     *
-     * TODO:
-     * - Incorporate adaptive step size into recombination?
-     * - Implement other recombination operators not in the book.
      */
 
     /* Implements simple arithmetic recombination.

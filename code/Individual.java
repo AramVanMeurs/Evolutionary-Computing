@@ -8,10 +8,6 @@ public class Individual implements Comparable<Individual>
     /* Implements the Individual class for an Evolutionary algorithm.
      * This class is meant to keep track of the parameters per individual.
      * This class can also be used to implement different initialization methods.
-     *
-     * TODO:
-     * - Implement parameters and parameter iniialization as they become needed.
-     * - TBD
      */
 
     double minValue;

@@ -47,18 +47,16 @@ public class player7 implements ContestSubmission
 
 	public void run()
 	{
-		// Run your algorithm here
-        
         // Run parameters
         int evals = 0;
         int epochs = 0;
 
         // Island model parameters
-        int islands = 5;
+        int islands = 1;
         int migration = 25;
         int numSwap = 2;
         String policy = "best";
-        boolean shuffle = true;
+        boolean shuffle = false;
 
         // Individual parameters
         double minVal = -5;
@@ -112,20 +110,13 @@ public class player7 implements ContestSubmission
                 island = archipelago[i];
 
                 // Select parents
-                //matingPool = Selection.parentLinearRanking(this.rnd_,island,rankingParam,numParents);
-                matingPool = Selection.parentExponentialRanking(this.rnd_,island,numParents);
-                //matingPool = Selection.parentUniform(this.rnd_,island,numParents);
+                matingPool = Selection.parentLinearRanking(this.rnd_,island,rankingParam,numParents);
 
                 // Apply crossover operator
-                //offspring = Recombination.simpleArithmetic(matingPool,alpha,allele);
-                //offspring = Recombination.singleArithmetic(this.rnd_,matingPool,alpha);
                 offspring = Recombination.blendCrossover(this.rnd_,matingPool,alpha);
 
                 // Apply mutation operator
-                //Mutation.uniform(this.rnd_,mProb,offspring.group);
-                //Mutation.simpleGaussian(this.rnd_, offspring.group);
                 Mutation.uncorrelatedAdaptiveGaussian(this.rnd_,offspring.group,lr1,lr2,eps);
-                //Mutation.creepMutation(this.rnd_, 0.05, 0.15, 2, offspring.group);
 
                 // Check fitness of unknown fuction
                 for(int j = 0; j < offspring.group.length; j++){
@@ -134,17 +125,14 @@ public class player7 implements ContestSubmission
                 }
 
                 // Select survivors
-                //Selection.survivorReplaceWorst(island,offspring,numReplace);
                 Selection.survivorRoundRobin(this.rnd_,island,offspring,numRivals);
-                //Selection.survivorMergeRanked(island,offspring);
-                //Selection.survivorGenerationalRanked(island,offspring);
 
                 // Increment ages of survivors by 1
                 island.incrementAges(1);
             }
 
             // Migrate individuals between islands after an amount of epochs
-            if(++epochs == migration){
+            if(++epochs == migration && islands > 1){
                 Population.migrate(this.rnd_,archipelago,numSwap,policy,shuffle);
                 epochs = 0;
             }
@@ -154,14 +142,5 @@ public class player7 implements ContestSubmission
                 break;
             }
         }
-
-        /* Lambda expressions example for comparing 
-         * individuals based on non-fitness metrics
-         */
-        //Collections.shuffle(Population.getArrayList(archipelago),this.rnd_);
-        //Arrays.sort(archipelago[0].group,(a,b) -> Individual.compareAges(a,b));
-        //System.out.println(archipelago[0]);
-        //System.out.println(archipelago[0].group[0].age);
-        //System.out.println(archipelago[0].group[popSize-1].age);
 	}
 }

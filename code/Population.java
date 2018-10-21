@@ -8,11 +8,6 @@ public class Population
     /* Implements the Population class for an Evolutionary algorithm.
      * This class is meant to keep track a group of individuals and
      * its interactions with other groups of individuals.
-     *
-     * TODO:
-     * - Implement integration of survivor selection and population updates
-     * - Implement general population management functions
-     * - Implement population interaction for island/cellular/metapopulation models
      */
 
     Individual[] group;

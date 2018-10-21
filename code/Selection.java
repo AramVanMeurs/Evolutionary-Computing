@@ -10,12 +10,6 @@ class Selection
      *
      * As of now, all selection methods are planned to return an array of indices to
      * pass to the Population class or a Population object for constructing a new group.
-     * (Any suggestions for change or improvement?)
-     *
-     * TODO:
-     * - Implement tournament selection
-     * - Implement ranking based selection
-     * - Implement survivor selection methods
      */
 
     /* Implements roulette sampling for 

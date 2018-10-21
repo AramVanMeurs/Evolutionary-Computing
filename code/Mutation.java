@@ -8,10 +8,6 @@ public class Mutation
      * the values of an array of Individual objects.
      *
      * All methods apply the mutations in place.
-     *
-     * TODO:
-     * - Uncorrelated Nonuniform mutation methods with step size
-     * - Correlated Nonuniform mutation methods
      */
 
     // Implements uniform mutation for real vector
